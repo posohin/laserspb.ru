@@ -1,23 +1,19 @@
 <?php
 
 /**
- * This is the model class for table "Users".
+ * This is the model class for table "Categories".
  *
- * The followings are the available columns in table 'Users':
- * @property string $id
- * @property string $username
- * @property string $password
+ * The followings are the available columns in table 'Categories':
+ * @property integer $id
  * @property string $name
- * @property string $role
- * @property string $email
- * @property string $ctime
+ * @property string $description
  */
-class Users extends CActiveRecord
+class Categories extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Users the static model class
+	 * @return Categories the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -29,7 +25,7 @@ class Users extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'Users';
+		return 'Categories';
 	}
 
 	/**
@@ -40,12 +36,13 @@ class Users extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password', 'required'),
-			array('username, password, name, email', 'length', 'max'=>255),
-			array('email', 'email'),
+			array('name', 'required'),
+			array('name', 'length', 'max'=>255),
+			array('name', 'unique'),
+			array('description', 'name', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, username, password, name, role, email', 'safe', 'on'=>'search'),
+			array('name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,12 +64,8 @@ class Users extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'username' => 'Логин',
-			'password' => 'Пароль',
-			'name' => 'Имя',
-			'role' => 'Тип учетной записи',
-			'email' => 'Email',
-			'ctime' => 'Создан',
+			'name' => 'Name',
+			'description' => 'Description',
 		);
 	}
 
@@ -87,13 +80,8 @@ class Users extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('username',$this->username,true);
-		$criteria->compare('password',$this->password,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
-		$criteria->compare('role',$this->role,true);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('ctime',$this->ctime,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
